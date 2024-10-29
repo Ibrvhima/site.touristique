@@ -67,21 +67,24 @@ class NationalPark extends Sites {
   }
 }
 
-/// Application Architecture
-
+//Recuperation des  elements du formulaire
 const form = document.querySelector(".form");
-const containerWorkouts = document.querySelector(".sites");
+const containerSites = document.querySelector(".sites");
 const inputType = document.querySelector(".form__input--type");
-const inputDistance = document.querySelector(".form__input--distance");
-const inputDuration = document.querySelector(".form__input--duration");
-const inputCadence = document.querySelector(".form__input--cadence");
-const inputElevation = document.querySelector(".form__input--elevation");
+const inputNomSite = document.querySelector(".form__input--nom");
+const inputRegion = document.querySelector(".form__input--region");
+const inputVille = document.querySelector(".form__input--ville");
+const inputAltitude = document.querySelector(".form__input--altitude");
+const inputSuperficie = document.querySelector(".form__input--superficie");
+const btn = document.querySelectorAll(".form__btn")
 
+
+////////////// L'architecture principale de l'application
 class App {
   #map;
   #mapEvent;
   #mapZoomLevel = 13;
-  #workouts = [];
+  #sites = [];
 
   constructor() {
     // Get user's position
@@ -90,7 +93,7 @@ class App {
     // Get data from local storage
     this._getLocalStorage();
 
-    form.addEventListener("submit", this._newWorkout.bind(this));
+    form.addEventListener("submit", this._newSite.bind(this));
 
     inputType.addEventListener("change", function (e) {
       inputElevation
@@ -99,7 +102,7 @@ class App {
       inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
     });
 
-    containerWorkouts.addEventListener("click", this._moveToPopup.bind(this));
+    containersites.addEventListener("click", this._moveToPopup.bind(this));
   }
 
   _getPosition() {
@@ -132,8 +135,8 @@ class App {
 
     this.#map.on("click", this._showForm.bind(this));
 
-    this.#workouts.forEach((workout) => {
-      this._renderWorkoutMarker(workout);
+    this.#sites.forEach((site) => {
+      this._renderSiteMarker(site);
     });
   }
 
@@ -157,7 +160,7 @@ class App {
     }, 500);
   }
 
-  _newWorkout(ev) {
+  _newsite(ev) {
     ev.preventDefault();
 
     const validInputs = (...inputs) =>
@@ -172,9 +175,9 @@ class App {
     const distance = Number(inputDistance.value);
     const duration = Number(inputDuration.value);
 
-    let workout;
+    let site;
 
-    // if workout running, create running object
+    // if site running, create running object
     if (type === "running") {
       const cadence = Number(inputCadence.value);
       // Check if data is valid
@@ -189,10 +192,10 @@ class App {
         return alert("Inputs have to be a positif number!");
       }
 
-      workout = new Running([lat, lng], distance, duration, cadence);
+      site = new Running([lat, lng], distance, duration, cadence);
     }
 
-    // if workout cycling, create cycling object
+    // if site cycling, create cycling object
     if (type === "cycling") {
       const elevationGain = Number(inputElevation.value);
       // Check if data is valid
@@ -203,27 +206,27 @@ class App {
         return alert("Inputs have to be a positif number!");
       }
 
-      workout = new Cycling([lat, lng], distance, duration, elevationGain);
+      site = new Cycling([lat, lng], distance, duration, elevationGain);
     }
 
-    // Add new object to workout array
-    this.#workouts.push(workout);
+    // Add new object to site array
+    this.#sites.push(site);
 
-    // Render workout on map as marker
-    this._renderWorkoutMarker(workout);
+    // Render site on map as marker
+    this._rendersiteMarker(site);
 
-    // Render workout on List
-    this._renderWorkout(workout);
+    // Render site on List
+    this._rendersite(site);
 
     // Hide form + clear input fields
     this._hideForm();
 
-    // Set local storage to all workouts
+    // Set local storage to all sites
     this._setLocalStorage();
   }
 
-  _renderWorkoutMarker(workout) {
-    L.marker(workout.coords)
+  _rendersiteMarker(site) {
+    L.marker(site.coords)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -231,62 +234,62 @@ class App {
           maxWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: `${workout.type}-popup`,
+          className: `${site.type}-popup`,
         })
       )
       .setPopupContent(
-        `${workout.type === "running" ? "🏃🏾" : "🚴🏾"} ${workout.description}`
+        `${site.type === "running" ? "🏃🏾" : "🚴🏾"} ${site.description}`
       )
       .openPopup();
   }
 
-  _renderWorkout(workout) {
+  _rendersite(site) {
     let html = `
-      <li class="workout workout--${
-        workout.type === "running" ? "running" : "cycling"
-      }" data-id="${workout.id}">
-          <h2 class="workout__title">${workout.description}</h2>
-          <div class="workout__details">
-            <span class="workout__icon">${
-              workout.type === "running" ? "🏃🏾" : "🚴🏾"
+      <li class="site site--${
+        site.type === "running" ? "running" : "cycling"
+      }" data-id="${site.id}">
+          <h2 class="site__title">${site.description}</h2>
+          <div class="site__details">
+            <span class="site__icon">${
+              site.type === "running" ? "🏃🏾" : "🚴🏾"
             }</span>
-            <span class="workout__value">${workout.distance}</span>
-            <span class="workout__uni🏃🏾t">km</span>
+            <span class="site__value">${site.distance}</span>
+            <span class="site__uni🏃🏾t">km</span>
           </div>
-          <div class="workout__details ">
-            <span class="workout__icon">⏱</span>
-            <span class="workout__value">${workout.duration}</span>
-            <span class="workout__unit">min</span>
+          <div class="site__details ">
+            <span class="site__icon">⏱</span>
+            <span class="site__value">${site.duration}</span>
+            <span class="site__unit">min</span>
           </div>
         
     `;
 
-    if (workout.type === "running") {
+    if (site.type === "running") {
       html += `
-      <div class="workout__details">
-            <span class="workout__icon">⚡️</span>
-            <span class="workout__value">${workout.pace.toFixed(1)}</span>
-            <span class="workout__unit">min/km</span>
+      <div class="site__details">
+            <span class="site__icon">⚡️</span>
+            <span class="site__value">${site.pace.toFixed(1)}</span>
+            <span class="site__unit">min/km</span>
           </div>
-          <div class="workout__details">
-            <span class="workout__icon">🦶🏼</span>
-            <span class="workout__value">${workout.cadence}</span>
-            <span class="workout__unit">spm</span>
+          <div class="site__details">
+            <span class="site__icon">🦶🏼</span>
+            <span class="site__value">${site.cadence}</span>
+            <span class="site__unit">spm</span>
           </div>
         </li>`;
     }
 
-    if (workout.type === "cycling") {
+    if (site.type === "cycling") {
       html += `
-      <div class="workout__details">
-            <span class="workout__icon">⚡️</span>
-            <span class="workout__value">${workout.speed.toFixed(1)}</span>
-            <span class="workout__unit">km/h</span>
+      <div class="site__details">
+            <span class="site__icon">⚡️</span>
+            <span class="site__value">${site.speed.toFixed(1)}</span>
+            <span class="site__unit">km/h</span>
           </div>
-          <div class="workout__details">
-            <span class="workout__icon">⛰</span>
-            <span class="workout__value">${workout.elevationGain}</span>
-            <span class="workout__unit">m</span>
+          <div class="site__details">
+            <span class="site__icon">⛰</span>
+            <span class="site__value">${site.elevationGain}</span>
+            <span class="site__unit">m</span>
           </div>
         </li>`;
     }
@@ -295,42 +298,42 @@ class App {
   }
 
   _moveToPopup(e) {
-    const workoutEl = e.target.closest(".workout");
+    const siteEl = e.target.closest(".site");
 
-    if (!workoutEl) return;
+    if (!siteEl) return;
 
-    const workout = this.#workouts.find((work) => {
-      return Number(workoutEl.dataset.id) === work.id;
+    const site = this.#sites.find((work) => {
+      return Number(siteEl.dataset.id) === work.id;
     });
 
-    this.#map.setView(workout.coords, this.#mapZoomLevel, {
+    this.#map.setView(site.coords, this.#mapZoomLevel, {
       animate: true,
       pan: {
         duration: 1,
       },
     });
 
-    // workout.click();
+    // site.click();
   }
 
   _setLocalStorage() {
-    localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+    localStorage.setItem("sites", JSON.stringify(this.#sites));
   }
 
   _getLocalStorage() {
-    const workouts = JSON.parse(localStorage.getItem("workouts"));
+    const sites = JSON.parse(localStorage.getItem("sites"));
 
-    if (!workouts) return;
+    if (!sites) return;
 
-    this.#workouts = workouts;
+    this.#sites = sites;
 
-    this.#workouts.forEach((workout) => {
-      this._renderWorkout(workout);
+    this.#sites.forEach((site) => {
+      this._rendersite(site);
     });
   }
 
   reset() {
-    localStorage.removeItem("workouts");
+    localStorage.removeItem("sites");
     location.reload();
   }
 }
