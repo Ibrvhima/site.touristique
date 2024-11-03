@@ -1,20 +1,19 @@
 "use strict";
 
 // Application Data
-//La classe parente
+// La classe parente
 class Sites {
   constructor(id, nom, coords, region, ville) {
-    (this.id = id),
-      (this.nom = nom),
-      (this.coords = coords),
-      (this.region = region),
-      (this.ville = ville);
-    this.itineraire();
+    this.id = id;
+    this.nom = nom;
+    this.coords = coords;
+    this.region = region;
+    this.ville = ville;
   }
 }
 
-//************************les classes enfants******************** */
-//Les montagnes
+//************************les classes enfants********************/
+// Les montagnes
 class Mountains extends Sites {
   type = "mountains";
   constructor(id, nom, coords, region, ville, altitude) {
@@ -23,319 +22,203 @@ class Mountains extends Sites {
   }
 }
 
-//les musées
+//les chute
+class Falls extends Sites {
+  type = "falls";
+  constructor(id, nom, coords, region, ville, altitude) {
+    super(id, nom, coords, region, ville);
+    this.altitude = altitude;
+  }
+}
+
+// Les musées
 class Museums extends Sites {
   type = "museums";
   constructor(id, nom, coords, region, ville, ouverture, fermeture, tarifs) {
     super(id, nom, coords, region, ville);
-    (this.ouverture = ouverture),
-      (this.fermeture = fermeture),
-      (this.tarifs = tarifs);
+    this.ouverture = ouverture;
+    this.fermeture = fermeture;
+    this.tarifs = tarifs;
   }
 }
 
-//les plages
+// Les plages
 class Beaches extends Sites {
   type = "beaches";
   constructor(id, nom, coords, region, ville, ouverture, fermeture, tarifs) {
     super(id, nom, coords, region, ville);
-    (this.ouverture = ouverture),
-      (this.fermeture = fermeture),
-      (this.tarifs = tarifs);
+    this.ouverture = ouverture;
+    this.fermeture = fermeture;
+    this.tarifs = tarifs;
   }
 }
 
-//les monuments
+// Les monuments
 class Monuments extends Sites {
   type = "monuments";
   constructor(id, nom, coords, region, ville, ouverture, fermeture, tarifs) {
     super(id, nom, coords, region, ville);
-    (this.ouverture = ouverture),
-      (this.fermeture = fermeture),
-      (this.tarifs = tarifs);
+    this.ouverture = ouverture;
+    this.fermeture = fermeture;
+    this.tarifs = tarifs;
   }
 }
 
-//les parc national
+// Les parcs nationaux
 class NationalPark extends Sites {
   type = "national_park";
   constructor(id, nom, coords, region, ville, ouverture, fermeture, tarifs) {
     super(id, nom, coords, region, ville);
-    (this.ouverture = ouverture),
-      (this.fermeture = fermeture),
-      (this.tarifs = tarifs);
+    this.ouverture = ouverture;
+    this.fermeture = fermeture;
+    this.tarifs = tarifs;
   }
 }
 
-//Recuperation des  elements du formulaire
+
+// Récupération des éléments du formulaire
 const form = document.querySelector(".form");
 const containerSites = document.querySelector(".sites");
-const inputType = document.querySelector(".form__input--type");
-const inputNomSite = document.querySelector(".form__input--nom");
-const inputRegion = document.querySelector(".form__input--region");
-const inputVille = document.querySelector(".form__input--ville");
-const inputAltitude = document.querySelector(".form__input--altitude");
-const inputSuperficie = document.querySelector(".form__input--superficie");
-const btn = document.querySelectorAll(".form__btn")
+const inputType = document.querySelector(".form_input--type");
+const inputNomSite = document.querySelector(".form_input--nom");
+const inputRegion = document.querySelector(".form_input--region");
+const inputVille = document.querySelector(".form_input--ville");
+const inputAltitude = document.querySelector(".form_input--altitude");
+const inputSuperficie = document.querySelector(".form_input--superficie");
+const btn = document.querySelectorAll(".form_btn");
+
 
 
 ////////////// L'architecture principale de l'application
+
 class App {
   #map;
   #mapEvent;
-  #mapZoomLevel = 13;
-  #sites = [];
-
   constructor() {
-    // Get user's position
-    this._getPosition();
+    this._LoadMap();
+    this.#map.on("click", this._showForm.bind(this)); 
 
-    // Get data from local storage
-    this._getLocalStorage();
+    form.addEventListener("submit", this.newSite.bind(this))
 
-    form.addEventListener("submit", this._newSite.bind(this));
-
-    inputType.addEventListener("change", function (e) {
-      inputElevation
-        .closest(".form__row")
-        .classList.toggle("form__row--hidden");
-      inputCadence.closest(".form__row").classList.toggle("form__row--hidden");
-    });
-
-    containersites.addEventListener("click", this._moveToPopup.bind(this));
+    
   }
 
-  _getPosition() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        this._loadMap.bind(this),
-        function () {
-          alert("Could not get your current location!");
-        }
-      );
-    }
-  }
+  //Les methondes
+  _LoadMap() {
+    // L'affichage de la carte de la Guinée
+    const coords = [11.1779033, -12.7000269];
 
-  _loadMap(position) {
-    const { longitude, latitude } = position.coords;
+    this.#map = L.map('map').setView(coords, 7);
 
-    const coords = [latitude, longitude];
-
-    this.#map = L.map("map").setView(coords, this.#mapZoomLevel);
-
-    L.tileLayer("https://tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(this.#map);
 
-    L.marker(coords)
+    L.marker([11.1779033, -12.7000269])
       .addTo(this.#map)
-      .bindPopup("A pretty CSS popup.<br> Easily customizable.")
+      .bindPopup({
+        maxwidth: 250,
+        maxwidth: 100,
+        autclose: false,
+        closeOnClick: false,
+      })
+      .setPopupContent("Merveilles de guinée")
       .openPopup();
 
-    this.#map.on("click", this._showForm.bind(this));
 
-    this.#sites.forEach((site) => {
-      this._renderSiteMarker(site);
-    });
   }
 
-  _showForm(e) {
+  _showForm() {
     this.#mapEvent = e;
-    form.classList.remove("hidden");
-    inputDistance.focus();
+      //const { lat, lng } = e.latlng;
+
+      form.classList.remove("hidden");
+      inputNomSite.focus();
+    // Affichage du formulaire et ajout des marqueurs au clic sur la carte
+     
   }
 
-  _hideForm() {
-    inputDistance.value =
-      inputDuration.value =
-      inputCadence.value =
-      inputElevation.value =
-        "";
+  _toogleInputAltitude() {
+    inputType.addEventListener("change", function (e) {
+      e.preventDefault();
 
-    form.style.display = "none";
-    form.classList.add("hidden");
-    setTimeout(() => {
-      form.style.display = "grid";
-    }, 500);
+      const selectedValue = inputType.value;
+      if (selectedValue === "mountains" || selectedValue === "falls") {
+        inputSuperficie.closest(".form__row").classList.add("form_row--hidden");
+        inputAltitude
+          .closest(".form__row")
+          .classList.remove("form_row--hidden");
+      } else {
+        inputSuperficie
+          .closest(".form__row")
+          .classList.remove("form_row--hidden");
+        inputAltitude.closest(".form__row").classList.add("form_row--hidden");
+      }
+    });
   }
 
-  _newsite(ev) {
-    ev.preventDefault();
+  newSite() { 
+    // Soumission du formulaire
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      const { lat, lng } = this.#mapEvent.latlng;
 
-    const validInputs = (...inputs) =>
-      inputs.every((inp) => Number.isFinite(inp));
+      //recuperation des données
+      const type = inputType.value;
 
-    const allPositive = (...inputs) => inputs.every((inp) => inp > 0);
 
-    const { lat, lng } = this.#mapEvent.latlng;
+      //validation des données
 
-    // Get data from form
-    const type = inputType.value;
-    const distance = Number(inputDistance.value);
-    const duration = Number(inputDuration.value);
 
-    let site;
+      //si le select est mountain de creée un objet mountain
+      if(type === "mountains" || type === "falls"){
+      const altitude = Number(inputAltitude)
 
-    // if site running, create running object
-    if (type === "running") {
-      const cadence = Number(inputCadence.value);
-      // Check if data is valid
-      if (
-        // !Number.isFinite(distance) ||
-        // !Number.isFinite(duration) ||
-        // !Number.isFinite(cadence)
 
-        !validInputs(distance, duration, cadence) ||
-        !allPositive(distance, duration, cadence)
-      ) {
-        return alert("Inputs have to be a positif number!");
       }
 
-      site = new Running([lat, lng], distance, duration, cadence);
-    }
+      //si le select est museums de creée un objet museums
+      if(type === "museums" || type === "beaches" || type === "monuments" || type === "national_park"){
+      const superficie = Number(inputSuperficie)
 
-    // if site cycling, create cycling object
-    if (type === "cycling") {
-      const elevationGain = Number(inputElevation.value);
-      // Check if data is valid
-      if (
-        !validInputs(distance, duration, elevationGain) ||
-        !allPositive(distance, duration)
-      ) {
-        return alert("Inputs have to be a positif number!");
-      }
-
-      site = new Cycling([lat, lng], distance, duration, elevationGain);
-    }
-
-    // Add new object to site array
-    this.#sites.push(site);
-
-    // Render site on map as marker
-    this._rendersiteMarker(site);
-
-    // Render site on List
-    this._rendersite(site);
-
-    // Hide form + clear input fields
-    this._hideForm();
-
-    // Set local storage to all sites
-    this._setLocalStorage();
-  }
-
-  _rendersiteMarker(site) {
-    L.marker(site.coords)
-      .addTo(this.#map)
-      .bindPopup(
-        L.popup({
-          minWidth: 250,
-          maxWidth: 100,
-          autoClose: false,
-          closeOnClick: false,
-          className: `${site.type}-popup`,
-        })
-      )
-      .setPopupContent(
-        `${site.type === "running" ? "🏃🏾" : "🚴🏾"} ${site.description}`
-      )
-      .openPopup();
-  }
-
-  _rendersite(site) {
-    let html = `
-      <li class="site site--${
-        site.type === "running" ? "running" : "cycling"
-      }" data-id="${site.id}">
-          <h2 class="site__title">${site.description}</h2>
-          <div class="site__details">
-            <span class="site__icon">${
-              site.type === "running" ? "🏃🏾" : "🚴🏾"
-            }</span>
-            <span class="site__value">${site.distance}</span>
-            <span class="site__uni🏃🏾t">km</span>
-          </div>
-          <div class="site__details ">
-            <span class="site__icon">⏱</span>
-            <span class="site__value">${site.duration}</span>
-            <span class="site__unit">min</span>
-          </div>
         
-    `;
+      }
 
-    if (site.type === "running") {
-      html += `
-      <div class="site__details">
-            <span class="site__icon">⚡️</span>
-            <span class="site__value">${site.pace.toFixed(1)}</span>
-            <span class="site__unit">min/km</span>
-          </div>
-          <div class="site__details">
-            <span class="site__icon">🦶🏼</span>
-            <span class="site__value">${site.cadence}</span>
-            <span class="site__unit">spm</span>
-          </div>
-        </li>`;
-    }
 
-    if (site.type === "cycling") {
-      html += `
-      <div class="site__details">
-            <span class="site__icon">⚡️</span>
-            <span class="site__value">${site.speed.toFixed(1)}</span>
-            <span class="site__unit">km/h</span>
-          </div>
-          <div class="site__details">
-            <span class="site__icon">⛰</span>
-            <span class="site__value">${site.elevationGain}</span>
-            <span class="site__unit">m</span>
-          </div>
-        </li>`;
-    }
+      //afficher le type de site sur la carte
+      L.marker([lat, lng])
+      .addTo(this.#map)
+      .bindPopup({
+        maxWidth: 250,
+        maxHeight: 100,
+        autoClose: false,
+        closeOnClick: false,
+      })
+      .setPopupContent("Merveilles de Guinée")
+      .openPopup();
 
-    form.insertAdjacentHTML("afterend", html);
-  }
+      //afficher le type de site sur  la  liste du sidbare
 
-  _moveToPopup(e) {
-    const siteEl = e.target.closest(".site");
+      //vider les champ de saisie puis masquer le formulaire
 
-    if (!siteEl) return;
 
-    const site = this.#sites.find((work) => {
-      return Number(siteEl.dataset.id) === work.id;
+     
+
+      // Nettoyage des champs du formulaire
+      inputNomSite.value = "";
+      inputRegion.value = "";
+      inputVille.value = "";
+      inputAltitude.value = "";
+      inputSuperficie.value = "";
+
+      // Masquage du formulaire après la soumission
+      form.classList.add("hidden");
     });
-
-    this.#map.setView(site.coords, this.#mapZoomLevel, {
-      animate: true,
-      pan: {
-        duration: 1,
-      },
-    });
-
-    // site.click();
-  }
-
-  _setLocalStorage() {
-    localStorage.setItem("sites", JSON.stringify(this.#sites));
-  }
-
-  _getLocalStorage() {
-    const sites = JSON.parse(localStorage.getItem("sites"));
-
-    if (!sites) return;
-
-    this.#sites = sites;
-
-    this.#sites.forEach((site) => {
-      this._rendersite(site);
-    });
-  }
-
-  reset() {
-    localStorage.removeItem("sites");
-    location.reload();
   }
 }
 
-const app = new App();
+//Instantiation de la classe App
+
+const app = new App()
+
