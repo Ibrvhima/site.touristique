@@ -1,0 +1,58 @@
+Document Spécifications techniques - Application Site Touristique
+
+
+1. Objectif de l'application
+L'objectif de l'application est de permettre aux utilisateurs d'ajouter, de gérer et d'afficher des sites touristiques sur une carte interactive. Ces sites peuvent inclure des montagnes, des chutes d'eau, des musées, des plages, des monuments, et des parcs nationaux. L'application permet aussi d'importer et d'exporter des données des sites touristiques sous format JSON.
+
+
+2. Architecture
+
+2.1 Composants principaux
+L'application se compose des éléments suivants :
+- Carte interactive (utilise Leaflet.js)
+- Formulaire d'ajout de sites touristiques
+- Historique des sites ajoutés avec possibilité de suppression
+- Gestion des sites via stockage local (localStorage)
+
+2.2 Structure de données
+Les sites touristiques sont représentés par des objets qui héritent de la classe 'Sites'. Les classes spécifiques sont : 'Mountains', 'Falls', 'Museums', 'Beaches', 'Monuments', et 'NationalPark'. Chaque site contient les informations suivantes :
+- nom
+- coordonnées géographiques (latitude et longitude)
+- région et ville
+- informations spécifiques comme l'altitude ou la superficie selon le type de site
+
+
+3. Description détaillée des classes
+
+3.1 Classe Sites
+La classe 'Sites' est la classe de base. Elle contient des propriétés communes à tous les types de sites : - nom, - coordonnées (latitude et longitude), - région, - ville.
+3.2 Classes dérivées
+Les classes dérivées héritent de 'Sites' et ajoutent des propriétés spécifiques.
+- 'Mountains' et 'Falls' ont la propriété 'altitude'.
+- 'Museums', 'Beaches', 'Monuments' et 'NationalPark' ont la propriété 'superficie'.
+
+
+4. Gestion des utilisateurs et des actions
+Les utilisateurs peuvent interagir avec l'application de plusieurs manières :
+- Ajouter un site touristique via un formulaire.
+- Supprimer un site existant.
+- Modifier les informations d'un site.
+- Visualiser les sites ajoutés sur la carte et dans un historique sous forme de liste.
+
+
+5. Interactions avec la carte
+La carte interactive est alimentée par Leaflet.js. Lorsqu'un utilisateur clique sur la carte, un formulaire s'affiche pour ajouter un site touristique. Les sites sont ensuite ajoutés à la carte sous forme de marqueurs, chaque marqueur ayant une icône spécifique en fonction du type de site.
+6. Import/Export de données
+Les données des sites peuvent être exportées sous forme de fichier JSON via un bouton 'Télécharger'. L'application permet également d'importer des fichiers JSON contenant des données de sites touristiques.
+
+
+7. Stockage local
+L'application utilise le stockage local (localStorage) pour sauvegarder les sites touristiques ajoutés. Lors du rechargement de la page, les données sont récupérées et affichées sur la carte et dans l'historique.
+
+
+8. Validation et gestion des erreurs
+Des validations sont effectuées lors de l'ajout d'un site pour s'assurer que les champs comme le nom, la région et la ville ne contiennent que des lettres. Si une erreur est détectée (par exemple, altitude ou superficie manquante ou invalide), un message d'erreur est affiché.
+
+
+9. Responsivité et adaptabilité
+L'application est conçue pour être responsive et s'adapter aux différentes tailles d'écran. Le formulaire est flexible, mais la carte et l'historique restent fixes en fonction de l'espace disponible.

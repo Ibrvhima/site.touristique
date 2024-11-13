@@ -1,12 +1,17 @@
 :root {
-  --color-brand--1: #ffb545;
-  --color-brand--2: #00c46a;
+ 
+--color-brand--1:#ffb545;
+--color-brand--2:  #00c46a;
+--color-brand--3: #45beff;
+--color-brand--4: #c47600;
+--color-brand--5: #b9a691;
+--color-brand--6: #9ba69e;
 
   --color-dark--1: #e8e8e7;
-  --color-dark--2: #b9a691;
+  --color-dark--2: #f3efe9;
   --color-light--1: #aaa;
-  --color-light--2: #ececec;
-  --color-light--3: rgb(214, 222, 224);
+  --color-light--2: #f39822;
+  --color-light--3: rgb(246, 194, 99);
 }
 
 * {
@@ -25,6 +30,7 @@ body {
   color: var(--color-light--2);
   font-weight: 400;
   line-height: 1.6;
+
   height: 100vh;
   overscroll-behavior-y: none;
 
@@ -34,13 +40,11 @@ body {
   display: flex;
 }
 
-/* GENERAL */
 a:link,
 a:visited {
   color: var(--color-brand--1);
 }
 
-/* SIDEBAR */
 .sidebar {
   flex-basis: 55rem;
   background-color: var(--color-dark--1);
@@ -75,7 +79,31 @@ a:visited {
   grid-template-columns: 1fr;
 }
 
-/* Formulaire  */
+
+.siteout--mountains {
+  border-left: 5px solid var(--color-brand--1);
+}
+.siteout--beaches {
+  border-left: 5px solid var(--color-brand--2);
+}
+.siteout--falls {
+  border-left: 5px solid var(--color-brand--3);
+}
+.siteout--museums {
+  border-left: 5px solid var(--color-brand--4);
+}
+.siteout--monuments {
+  border-left: 5px solid var(--color-brand--5);
+}
+.siteout--national_park {
+  border-left: 5px solid var(--color-brand--6);
+}
+
+
+
+
+
+
 .form {
   display: grid;
   grid-template-columns: 1fr;
@@ -116,20 +144,18 @@ a:visited {
   border-color: #ca8506;
 }
 
-/* Style pour le type select */
 .form_input--type {
   background-color: #fff;
   font-size: 16px;
 }
 
-::placeholder{
+::placeholder {
   font-size: 16px;
 }
-option{
+option {
   font-size: 16px;
 }
 
-/* Cacher le formulaire avec la classe hidden */
 .hidden {
   display: none;
 }
@@ -138,6 +164,62 @@ option{
   display: none;
 }
 
+.btnSubmite {
+  margin-top: 2rem;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  background-color: var(--color-brand--1);
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.btnSubmite:hover {
+  background-color: var(--color-brand--2);
+}
+.btns_expor--inport {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: espace-between;
+  gap: 24rem;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  background-color: var(--color-brand--1);
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+}
+.btns_expor--inport a {
+  font-weight: 700;
+  color: #333;
+  border: #fff solid transparent;
+  background-color: #eae8e5ca;
+
+  padding: 0.3rem 0.5rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btns_expor--inport a:hover {
+  background-color: var(--color-brand--2);
+  box-shadow: inset 1px 2px 1px 2px #eae8e5;
+}
+
+.form_btn{
+  font-size: 1.6rem;
+  padding: 5px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+
+}
+.form_btn:hover{
+background-color:  #559778;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
 
 .copyright {
   margin-top: auto;
@@ -157,14 +239,12 @@ option{
   color: var(--color-light--2);
 }
 
-/* MAP */
 #map {
   flex: 1;
   height: 100%;
   background-color: var(--color-light--1);
 }
 
-/* Popup width is defined in JS using options */
 .leaflet-popup .leaflet-popup-content-wrapper {
   background-color: var(--color-dark--1);
   color: var(--color-light--2);
@@ -180,9 +260,246 @@ option{
   background-color: var(--color-dark--1);
 }
 
-.running-popup .leaflet-popup-content-wrapper {
-  border-left: 5px solid var(--color-brand--2);
+.site_history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
 }
-.cycling-popup .leaflet-popup-content-wrapper {
-  border-left: 5px solid var(--color-brand--1);
+
+.siteout {
+  position: relative;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 390px;
+  justify-items: center;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fcfbfb;
+  text-align: center;
+  transition: box-shadow 0.2s ease;
 }
+
+.siteout:hover {
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.siteout .icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.siteout .details {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+ion-icon {
+  color: #ca8506;
+  font-size: 2rem;
+}
+.adress,
+.altitude {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 2.4rem;
+  margin-right: 10px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+}
+
+.siteout div:first-child {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-self: center;
+}
+
+.siteout .altitude,
+.siteout .superficie {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.delete-site {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  width: 40px;
+  height: auto;
+
+  cursor: pointer;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  transition: color 0.3s ease;
+  border: transparent;
+}
+
+.icon-delete {
+  font-size: 2.5rem;
+  color: red;
+}
+
+/* --- Responsive Design --- */
+
+/* Styles pour les appareils de bureau (écrans larges) */
+@media (min-width: 1025px) {
+  
+  html {
+    font-size: 62.5%;
+  }
+
+  .sidebar {
+    flex-basis: 55rem; 
+    padding: 3rem 5rem;
+  }
+  
+  .form {
+    max-width: 60rem; 
+  }
+}
+
+/* Styles pour les tablettes */
+@media (max-width: 1024px) {
+  html {
+    font-size: 58%; 
+  }
+
+  .sidebar {
+    flex-basis: 50%;
+    padding: 2rem 3rem;
+  }
+
+  .btns_expor--inport {
+    gap: 8rem; 
+  }
+
+  .form {
+    max-width: 50rem; 
+    padding: 2rem;
+  }
+
+  .siteout {
+    grid-template-columns: 1fr 1fr; 
+  }
+}
+
+/* Styles pour les téléphones */
+@media (max-width: 767px) {
+  html {
+    font-size: 55%; 
+  }
+
+  body {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .sidebar {
+    flex-basis: 100%;
+    padding: 1.5rem;
+  }
+
+  .logo {
+    height: 5rem; /* Réduction de la taille du logo */
+  }
+
+  .form {
+    max-width: 100%; /* Le formulaire occupe toute la largeur */
+    padding: 1.5rem;
+  }
+
+  .siteout {
+    grid-template-columns: 1fr; /* Disposition en une seule colonne */
+  }
+
+  .btns_expor--inport {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .btnSubmite {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .copyright {
+    font-size: 1.2rem; /* Taille de la police plus petite pour les informations de copyright */
+  }
+}
+
+
+.sidebar {
+  flex-basis: 55rem; /* Taille standard sur les grands écrans */
+  padding: 3rem 5rem;
+  transition: transform 0.3s ease; /* Animation de transition */
+}
+
+/* Cacher la sidebar sur mobile */
+@media (max-width: 767px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80%; /* Largeur de la sidebar en version mobile */
+    max-width: 300px;
+    background-color: #fff;
+    z-index: 1000;
+    transform: translateX(-100%); /* Cacher la sidebar par défaut */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.visible {
+    transform: translateX(0); /* Affiche la sidebar lorsqu'elle est visible */
+  }
+  
+}
+
+.search-container {
+  position: absolute;
+  top: 30px; 
+  left: 55%;
+  transform: translateX(-50%);
+  z-index: 1000; 
+  display: flex;
+  align-items: center;
+  width: 30%;
+  background-color: var(--color-dark--1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.search-container input {
+  width: 100%;
+  height: auto;
+  border: none;
+  border-radius: 5px;
+  outline: 1px solid #f59b15;
+  padding: 15px;
+  font-size: 14px;
+  font-size: 1.6rem;
+}
+
+.search-container button {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.search-container button ion-icon {
+  font-size: 3rem;
+}
+
