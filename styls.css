@@ -468,7 +468,7 @@ ion-icon {
 .search-container {
   position: absolute;
   top: 30px; 
-  left: 55%;
+  left: 60%;
   transform: translateX(-50%);
   z-index: 1000; 
   display: flex;
